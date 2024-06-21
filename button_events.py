@@ -156,7 +156,7 @@ class ButtonEventGroup:
         start_time = time.time()
         while (1):
             current_time = time.time()
-            during_time = start_time - current_time
+            during_time = current_time - start_time
             if during_time > 4:
                 break
         self.set_motor_data(1, "stop", 0)  # Stop motor 1 when sensor 2 value is close to the initial value
