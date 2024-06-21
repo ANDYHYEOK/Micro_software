@@ -140,15 +140,26 @@ class ButtonEventGroup:
         self.sensor_thread = Thread(target=self.sensor_monitor)
         self.sensor_thread.start()
 
+    # def release(self):
+    #     self.stop_all = True
+    #     self.running = False
+    #     self.set_motor_data(2, "stop", 0)  # Stop motor 2 immediately
+    #     self.set_motor_data(1, "inhale", self.duty_cycle)  # Start motor 1 inhale
+    #     while abs(self.analogRead(1) - self.grip_value) > 100:
+    #         time.sleep(0.1)
+    #     self.set_motor_data(1, "stop", 0)  # Stop motor 1 when sensor 2 value is close to the initial value
     def release(self):
         self.stop_all = True
         self.running = False
         self.set_motor_data(2, "stop", 0)  # Stop motor 2 immediately
         self.set_motor_data(1, "inhale", self.duty_cycle)  # Start motor 1 inhale
-        while abs(self.analogRead(1) - self.grip_value) > 100:
-            time.sleep(0.1)
+        start_time = time.time()
+        while (1):
+            current_time = time.time()
+            during_time = start_time - current_time
+            if during_time > 4:
+                break
         self.set_motor_data(1, "stop", 0)  # Stop motor 1 when sensor 2 value is close to the initial value
-        
     def emergency_stop(self):
         self.stop_all = True
         self.running = False
