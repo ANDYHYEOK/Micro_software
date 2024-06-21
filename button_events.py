@@ -5,10 +5,13 @@ import tkinter as tk
 from threading import Thread
 
 
-class button_event_group():
+class ButtonEventGroup():
     def __init__(self) -> None:
         # Initialize self.SPI
-        self.spi = spidev.self.SpiDev()
+        
+        GPIO.cleanup()
+        
+        self.spi = spidev.SpiDev()
         self.spi.open(0, 0)
         self.spi.max_speed_hz = 1000000
 
@@ -78,7 +81,7 @@ class button_event_group():
     def sensor_monitor(self):
         while self.running:
             sensorInput = self.analogRead(0)
-            self.sensor_value_label.config(text="Sensor 1 Value: {}".format(sensorInput))
+            # self.sensor_value_label.config(text="Sensor 1 Value: {}".format(sensorInput))
 
             if sensorInput < 500:
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
@@ -95,16 +98,6 @@ class button_event_group():
             self.duty_cycle = 100
         print("Duty Cycle set to: {}%".format(self.duty_cycle))
 
-    def create_voltage_control(self):
-        self.voltage_control_window = tk.Toplevel(self.root)
-        self.voltage_control_window.title("Voltage Control")
-
-        self.increase_button = tk.Button(self.voltage_control_window, text="Increase Duty Cycle", command=lambda: self.adjust_self.duty_cycle(10))
-        self.increase_button.pack(pady=10)
-
-        self.decrease_button = tk.Button(self.voltage_control_window, text="Decrease Duty Cycle", command=lambda: self.adjust_self.duty_cycle(-10))
-        self.decrease_button.pack(pady=10)
-
     def grab(self):
         self.running = True
         self.stop_all = False
@@ -112,7 +105,7 @@ class button_event_group():
         self.set_motor_data(2, "inhale", self.duty_cycle)
         self.sensor_thread = Thread(target=self.sensor_monitor)
         self.sensor_thread.start()
-        self.create_voltage_control()
+
 
     def release(self):
         self.stop_all = True
