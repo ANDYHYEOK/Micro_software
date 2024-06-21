@@ -2,9 +2,7 @@ import tkinter as tk
 from tkinter import PhotoImage
 from button_events import ButtonEventGroup  # 수정된 import 문
 
-def create_buttons(canvas):
-    button_events = ButtonEventGroup()  # button_event_group() 대신 ButtonEventGroup() 사용
-
+def create_buttons(canvas):    
     pick_image_path = "./btn_images/pick.png"
     put_image_path = "./btn_images/put.png"
     stop_image_path = "./btn_images/stop.png"
@@ -12,7 +10,18 @@ def create_buttons(canvas):
     pick_image = PhotoImage(file=pick_image_path)
     put_image = PhotoImage(file=put_image_path)
     stop_image = PhotoImage(file=stop_image_path)
+    
+    #수정됨
+    sensor1_log = tk.Text(canvas, width=70, height=15, state=tk.DISABLED)
+    sensor1_log.place(x=80, y=73, width=560, height=237)
+    sensor2_log = tk.Text(canvas, width=70, height=439, state=tk.DISABLED)
+    sensor2_log.place(x=80, y=439, width=560, height=237)
+    
+    
+    button_events = ButtonEventGroup(sensor1_log,sensor2_log)  # button_event_group() 대신 ButtonEventGroup() 사용
+    #수정됨
 
+    
     pick_button = tk.Button(canvas, image=pick_image, bd=0, command=lambda: pick_clicked(button_events))
     pick_button.image = pick_image  # 이미지 객체를 버튼의 속성으로 설정
     pick_button.place(x=835, y=346)
