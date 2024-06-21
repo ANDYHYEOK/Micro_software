@@ -100,17 +100,45 @@ class ButtonEventGroup:
             elif state == "stop":  # Stop state
                 self.Motor_B_1_PWM.ChangeDutyCycle(0)
                 
+    # def sensor_monitor(self):
+    #     # global running, stop_all, duty_cycle, grip_value, sensor2_threshold_difference
+    #     while self.running:
+    #         sensorInput = self.analogRead(0)
+    #         sensorInput2 = self.analogRead(1)
+            
+    #         self.update_sensor_logs(sensorInput, sensorInput2)
+            
+    #         if sensorInput > 3000:
+    #             self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
+    #         if self.grip_value is not None and (
+    #             sensorInput2 >= self.grip_value + self.sensor2_threshold_difference
+    #         ):
+    #             self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
+
+    #         self.set_motor_data(
+    #             2, "inhale", self.duty_cycle
+    #         )  # Motor 2 continues to inhale
+
+    #         time.sleep(0.1)
+    #         if self.stop_all:
+    #             break
     def sensor_monitor(self):
         # global running, stop_all, duty_cycle, grip_value, sensor2_threshold_difference
+        
+        start_time = time.time()
+        during_time = 0
+        
         while self.running:
+            current_time = time.time()
             sensorInput = self.analogRead(0)
             sensorInput2 = self.analogRead(1)
             
             self.update_sensor_logs(sensorInput, sensorInput2)
-            
-            if sensorInput > 3000:
+            during_time = start_time - current_time
+            if sensorInput > 3000 or during_time>4:
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
-            if self.grip_value is not None and (
+            
+            elif self.grip_value is not None and (
                 sensorInput2 >= self.grip_value + self.sensor2_threshold_difference
             ):
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
@@ -122,7 +150,6 @@ class ButtonEventGroup:
             time.sleep(0.1)
             if self.stop_all:
                 break
-
     def adjust_duty_cycle(self, increment):
         self.duty_cycle += increment
         if self.duty_cycle < 10:
