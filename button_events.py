@@ -122,6 +122,34 @@ class ButtonEventGroup:
     #         time.sleep(0.1)
     #         if self.stop_all:
     #             break
+    # def sensor_monitor(self):
+    #     # global running, stop_all, duty_cycle, grip_value, sensor2_threshold_difference
+        
+    #     start_time = time.time()
+    #     during_time = 0
+        
+    #     while self.running:
+    #         current_time = time.time()
+    #         sensorInput = self.analogRead(0)
+    #         sensorInput2 = self.analogRead(1)
+            
+    #         self.update_sensor_logs(sensorInput, sensorInput2)
+    #         during_time = start_time - current_time
+    #         if sensorInput > 3000 or during_time>4:
+    #             self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
+            
+    #         elif self.grip_value is not None and (
+    #             sensorInput2 >= self.grip_value + self.sensor2_threshold_difference
+    #         ):
+    #             self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
+
+    #         self.set_motor_data(
+    #             2, "inhale", self.duty_cycle
+    #         )  # Motor 2 continues to inhale
+
+    #         time.sleep(0.1)
+    #         if self.stop_all:
+    #             break
     def sensor_monitor(self):
         # global running, stop_all, duty_cycle, grip_value, sensor2_threshold_difference
         
@@ -134,13 +162,16 @@ class ButtonEventGroup:
             sensorInput2 = self.analogRead(1)
             
             self.update_sensor_logs(sensorInput, sensorInput2)
+            
             during_time = start_time - current_time
-            if sensorInput > 3000 or during_time>4:
+            
+            
+            if during_time> 4:
+                self.set_motor_data(1, "stop", self.duty_cycle)
+            elif sensorInput > 3000:
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
             
-            elif self.grip_value is not None and (
-                sensorInput2 >= self.grip_value + self.sensor2_threshold_difference
-            ):
+            elif self.grip_value is not None and (sensorInput2 >= self.grip_value + self.sensor2_threshold_difference):
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
 
             self.set_motor_data(
