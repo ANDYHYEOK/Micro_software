@@ -53,7 +53,7 @@ class ButtonEventGroup:
         self.stop_all = False
         self.duty_cycle = 100  # Initial duty cycle set to 100%
         self.sensor2_threshold_difference = 500
-        
+        self.grip_value = None
     def update_sensor_logs(self, sensor1_value, sensor2_value):
         # sensor1_log 업데이트
         self.sensor1_log.config(state=tk.NORMAL)
@@ -106,7 +106,7 @@ class ButtonEventGroup:
             sensorInput = self.analogRead(0)
             sensorInput2 = self.analogRead(1)
             
-            self.root.after(0, self.update_sensor_logs, sensorInput, sensorInput2)
+            self.update_sensor_logs(sensorInput, sensorInput2)
             
             if sensorInput > 3000:
                 self.set_motor_data(1, "stop", self.duty_cycle)  # Stop motor 1
@@ -132,6 +132,7 @@ class ButtonEventGroup:
         print("Duty Cycle set to: {}%".format(self.duty_cycle))
 
     def grab(self):
+        self.grip_value = self.analogRead(1)
         self.running = True
         self.stop_all = False
         self.set_motor_data(1, "exhale", self.duty_cycle)
@@ -144,7 +145,10 @@ class ButtonEventGroup:
         self.running = False
         self.set_motor_data(1, "stop", 0)
         self.set_motor_data(2, "stop", 0)
-
+        while abs(self.analogRead(1) - self.grip_value) > 100:
+            time.sleep(0.1)
+        self.set_motor_data(1, "stop", 0)  # Stop motor 1 when sensor 2 value is close to the initial value
+        
     def emergency_stop(self):
         self.stop_all = True
         self.running = False
