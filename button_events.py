@@ -212,6 +212,7 @@ class ButtonEventGroup:
         self.set_motor_data(2, "stop", 0)  # Stop motor 2 immediately
         self.set_motor_data(1, "inhale", self.duty_cycle)  # Start motor 1 inhale
         start_time = time.time()
+        during_time = 0
         while (1):
             current_time = time.time()
             during_time = current_time - start_time
